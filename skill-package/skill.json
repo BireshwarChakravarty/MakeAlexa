@@ -1,0 +1,61 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "My Dashboard",
+          "summary": "A fast, custom touch dashboard for your Echo Show.",
+          "description": "Renders a personal dashboard on your Echo Show with a clock, weather, calendar agenda, touchable smart-home control tiles, and a media/camera card. Built with Alexa Presentation Language (APL).",
+          "examplePhrases": [
+            "Alexa, open my dashboard",
+            "Alexa, show my dashboard"
+          ],
+          "keywords": [
+            "dashboard",
+            "smart home",
+            "display",
+            "clock",
+            "weather"
+          ],
+          "smallIconUri": "https://s3.amazonaws.com/your-bucket/icon-108.png",
+          "largeIconUri": "https://s3.amazonaws.com/your-bucket/icon-512.png"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Say 'open my dashboard' on an Echo Show device. Tap a control tile to confirm the touch event is received by the backend.",
+      "category": "SMART_HOME",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "sourceDir": "lambda"
+        },
+        "interfaces": [
+          {
+            "type": "ALEXA_PRESENTATION_APL",
+            "supportedViewports": [
+              { "mode": "HUB", "shape": "RECTANGLE", "minWidth": 960 }
+            ]
+          }
+        ]
+      }
+    },
+    "manifestVersionNote": "APL interface enables on-screen rendering for Echo Show devices.",
+    "permissions": [],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "https://example.com/privacy",
+          "termsOfUseUrl": "https://example.com/terms"
+        }
+      }
+    }
+  }
+}

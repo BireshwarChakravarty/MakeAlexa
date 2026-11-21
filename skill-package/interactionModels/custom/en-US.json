@@ -1,0 +1,46 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "my dashboard",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "ShowDashboardIntent",
+          "slots": [],
+          "samples": [
+            "show the dashboard",
+            "show my dashboard",
+            "open the dashboard",
+            "go to my dashboard",
+            "dashboard"
+          ]
+        },
+        {
+          "name": "RefreshIntent",
+          "slots": [],
+          "samples": [
+            "refresh",
+            "refresh the dashboard",
+            "update the dashboard"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}
