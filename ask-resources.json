@@ -9,13 +9,6 @@
         "default": {
           "src": "./lambda"
         }
-      },
-      "skillInfrastructure": {
-        "userConfig": {
-          "runtime": "nodejs18.x",
-          "handler": "index.handler"
-        },
-        "type": "@ask-cli/lambda-deployer"
       }
     }
   }

@@ -1,0 +1,496 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "theme": "dark",
+  "description": "MakeAlexa custom dashboard for Echo Show",
+  "settings": {
+    "idleTimeout": 3600000
+  },
+  "background": {
+    "type": "linear",
+    "colorRange": ["#151B24", "#0A0D11"],
+    "inputRange": [0, 1],
+    "angle": 160
+  },
+  "resources": [
+    {
+      "colors": {
+        "text": "#F5F7FA",
+        "textDim": "#9AA4B2",
+        "card": "#1A2029",
+        "tileOff": "#222A36",
+        "tileOn": "#F2B84B",
+        "textOnTile": "#241A05",
+        "textDimOnTile": "#5C4510",
+        "accent": "#5AA9FF",
+        "chip": "#000000AA"
+      }
+    },
+    {
+      "dimensions": {
+        "radius": "20dp"
+      }
+    }
+  ],
+  "styles": {
+    "pressable": {
+      "values": [
+        { "opacity": 1 },
+        { "when": "${state.pressed}", "opacity": 0.65 }
+      ]
+    }
+  },
+  "layouts": {
+    "Tile": {
+      "parameters": ["tile"],
+      "item": {
+        "type": "Container",
+        "width": "100%",
+        "height": "100%",
+        "paddingLeft": "8dp",
+        "paddingRight": "8dp",
+        "paddingTop": "8dp",
+        "paddingBottom": "8dp",
+        "items": [
+          {
+            "type": "TouchWrapper",
+            "width": "100%",
+            "height": "100%",
+            "disabled": "${!tile.interactive}",
+            "bind": [
+              { "name": "isOn", "value": "${tile.on}", "type": "boolean" }
+            ],
+            "onPress": [
+              {
+                "type": "SetValue",
+                "property": "isOn",
+                "value": "${tile.kind == 'toggle' ? !isOn : isOn}"
+              },
+              {
+                "type": "SendEvent",
+                "arguments": ["tile", "${tile.id}"]
+              }
+            ],
+            "item": {
+              "type": "Frame",
+              "width": "100%",
+              "height": "100%",
+              "borderRadius": "@radius",
+              "inheritParentState": true,
+              "style": "pressable",
+              "backgroundColor": "${tile.kind == 'toggle' && isOn ? @tileOn : @tileOff}",
+              "item": {
+                "type": "Container",
+                "width": "100%",
+                "height": "100%",
+                "justifyContent": "spaceBetween",
+                "paddingLeft": "20dp",
+                "paddingRight": "16dp",
+                "paddingTop": "16dp",
+                "paddingBottom": "16dp",
+                "items": [
+                  {
+                    "type": "Text",
+                    "text": "${tile.name}",
+                    "fontSize": "24dp",
+                    "fontWeight": "500",
+                    "maxLines": 2,
+                    "color": "${tile.kind == 'toggle' && isOn ? @textOnTile : @text}"
+                  },
+                  {
+                    "type": "Text",
+                    "text": "${tile.kind == 'toggle' && isOn != tile.on ? (isOn ? 'On' : 'Off') : tile.status}",
+                    "fontSize": "20dp",
+                    "maxLines": 1,
+                    "color": "${tile.kind == 'toggle' && isOn ? @textDimOnTile : @textDim}"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "AgendaRow": {
+      "parameters": ["event"],
+      "item": {
+        "type": "Container",
+        "direction": "row",
+        "width": "100%",
+        "paddingTop": "10dp",
+        "paddingBottom": "10dp",
+        "items": [
+          {
+            "type": "Container",
+            "width": "110dp",
+            "items": [
+              { "type": "Text", "text": "${event.day}", "fontSize": "18dp", "color": "@textDim", "maxLines": 1 },
+              { "type": "Text", "text": "${event.time}", "fontSize": "20dp", "color": "@accent", "maxLines": 1 }
+            ]
+          },
+          {
+            "type": "Text",
+            "text": "${event.title}",
+            "grow": 1,
+            "shrink": 1,
+            "fontSize": "22dp",
+            "color": "@text",
+            "maxLines": 2
+          }
+        ]
+      }
+    }
+  },
+  "mainTemplate": {
+    "parameters": ["dashboard"],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "paddingLeft": "40dp",
+        "paddingRight": "40dp",
+        "paddingTop": "24dp",
+        "paddingBottom": "14dp",
+        "handleTick": [
+          {
+            "minimumDelay": "${dashboard.refreshMs}",
+            "commands": [
+              { "type": "SendEvent", "arguments": ["refresh"] }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "type": "Container",
+            "description": "Header: clock and weather",
+            "direction": "row",
+            "width": "100%",
+            "justifyContent": "spaceBetween",
+            "alignItems": "end",
+            "items": [
+              {
+                "type": "TouchWrapper",
+                "description": "Tap the clock to refresh",
+                "onPress": [
+                  { "type": "SendEvent", "arguments": ["refresh"] }
+                ],
+                "item": {
+                  "type": "Container",
+                  "items": [
+                    {
+                      "type": "Container",
+                      "direction": "row",
+                      "alignItems": "baseline",
+                      "items": [
+                        {
+                          "type": "Text",
+                          "text": "${Time.format(dashboard.clockFormat, localTime)}",
+                          "fontSize": "112dp",
+                          "fontWeight": "300",
+                          "color": "@text"
+                        },
+                        {
+                          "type": "Text",
+                          "when": "${dashboard.showAmPm}",
+                          "text": "${Time.hours(localTime) < 12 ? 'AM' : 'PM'}",
+                          "fontSize": "34dp",
+                          "color": "@textDim",
+                          "paddingLeft": "12dp"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${dashboard.weekdays[Time.weekDay(localTime)]}, ${dashboard.months[Time.month(localTime)]} ${Time.date(localTime)}",
+                      "fontSize": "30dp",
+                      "color": "@textDim"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Container",
+                "alignItems": "end",
+                "items": [
+                  {
+                    "type": "Text",
+                    "text": "${dashboard.weather.temp}°",
+                    "fontSize": "88dp",
+                    "fontWeight": "300",
+                    "color": "@text"
+                  },
+                  {
+                    "type": "Text",
+                    "text": "${dashboard.weather.condition}",
+                    "fontSize": "28dp",
+                    "color": "@text"
+                  },
+                  {
+                    "type": "Text",
+                    "text": "${dashboard.weather.details}",
+                    "fontSize": "20dp",
+                    "color": "@textDim"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "description": "Body: tiles and media on the left, camera and agenda on the right",
+            "direction": "row",
+            "width": "100%",
+            "grow": 1,
+            "shrink": 1,
+            "paddingTop": "16dp",
+            "items": [
+              {
+                "type": "Container",
+                "width": "63%",
+                "height": "100%",
+                "items": [
+                  {
+                    "type": "GridSequence",
+                    "width": "100%",
+                    "height": "100%",
+                    "shrink": 1,
+                    "scrollDirection": "vertical",
+                    "childWidth": "25%",
+                    "childHeight": "128dp",
+                    "data": "${dashboard.tiles}",
+                    "items": [
+                      { "type": "Tile", "tile": "${data}" }
+                    ]
+                  },
+                  {
+                    "type": "Frame",
+                    "when": "${dashboard.media.enabled}",
+                    "width": "100%",
+                    "height": "108dp",
+                    "paddingLeft": "8dp",
+                    "paddingRight": "8dp",
+                    "paddingTop": "8dp",
+                    "item": {
+                      "type": "Frame",
+                      "width": "100%",
+                      "height": "100%",
+                      "borderRadius": "@radius",
+                      "backgroundColor": "@card",
+                      "item": {
+                        "type": "Container",
+                        "direction": "row",
+                        "alignItems": "center",
+                        "width": "100%",
+                        "height": "100%",
+                        "paddingLeft": "14dp",
+                        "paddingRight": "16dp",
+                        "items": [
+                          {
+                            "type": "Image",
+                            "when": "${dashboard.media.art != ''}",
+                            "source": "${dashboard.media.art}",
+                            "width": "72dp",
+                            "height": "72dp",
+                            "borderRadius": "12dp",
+                            "scale": "best-fill"
+                          },
+                          {
+                            "type": "Frame",
+                            "when": "${dashboard.media.art == ''}",
+                            "width": "72dp",
+                            "height": "72dp",
+                            "borderRadius": "12dp",
+                            "backgroundColor": "@tileOff"
+                          },
+                          {
+                            "type": "Container",
+                            "grow": 1,
+                            "shrink": 1,
+                            "paddingLeft": "18dp",
+                            "paddingRight": "12dp",
+                            "items": [
+                              { "type": "Text", "text": "${dashboard.media.title}", "fontSize": "24dp", "fontWeight": "500", "color": "@text", "maxLines": 1 },
+                              { "type": "Text", "text": "${dashboard.media.subtitle}", "fontSize": "19dp", "color": "@textDim", "maxLines": 1 }
+                            ]
+                          },
+                          {
+                            "type": "TouchWrapper",
+                            "when": "${dashboard.media.interactive}",
+                            "bind": [
+                              { "name": "isPlaying", "value": "${dashboard.media.playing}", "type": "boolean" }
+                            ],
+                            "onPress": [
+                              { "type": "SetValue", "property": "isPlaying", "value": "${!isPlaying}" },
+                              { "type": "SendEvent", "arguments": ["media", "play_pause"] }
+                            ],
+                            "item": {
+                              "type": "Frame",
+                              "inheritParentState": true,
+                              "style": "pressable",
+                              "borderRadius": "28dp",
+                              "backgroundColor": "@accent",
+                              "paddingLeft": "26dp",
+                              "paddingRight": "26dp",
+                              "paddingTop": "12dp",
+                              "paddingBottom": "12dp",
+                              "item": {
+                                "type": "Text",
+                                "text": "${isPlaying ? 'Pause' : 'Play'}",
+                                "fontSize": "22dp",
+                                "fontWeight": "500",
+                                "color": "#0A1A2E"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "Container",
+                "width": "37%",
+                "height": "100%",
+                "paddingLeft": "16dp",
+                "paddingTop": "8dp",
+                "paddingBottom": "8dp",
+                "items": [
+                  {
+                    "type": "Container",
+                    "description": "Camera card",
+                    "width": "100%",
+                    "height": "210dp",
+                    "items": [
+                      {
+                        "type": "Frame",
+                        "position": "absolute",
+                        "width": "100%",
+                        "height": "100%",
+                        "borderRadius": "@radius",
+                        "backgroundColor": "@card",
+                        "item": {
+                          "type": "Container",
+                          "width": "100%",
+                          "height": "100%",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "items": [
+                            {
+                              "type": "Text",
+                              "when": "${dashboard.camera.mode == 'none'}",
+                              "text": "${dashboard.camera.hint}",
+                              "fontSize": "20dp",
+                              "color": "@textDim",
+                              "textAlign": "center"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "Video",
+                        "when": "${dashboard.camera.mode == 'video'}",
+                        "position": "absolute",
+                        "width": "100%",
+                        "height": "100%",
+                        "source": "${dashboard.camera.url}",
+                        "autoplay": true,
+                        "audioTrack": "none",
+                        "scale": "best-fill"
+                      },
+                      {
+                        "type": "Image",
+                        "when": "${dashboard.camera.mode == 'image'}",
+                        "position": "absolute",
+                        "width": "100%",
+                        "height": "100%",
+                        "source": "${dashboard.camera.url}",
+                        "borderRadius": "@radius",
+                        "scale": "best-fill"
+                      },
+                      {
+                        "type": "Frame",
+                        "position": "absolute",
+                        "left": "12dp",
+                        "top": "12dp",
+                        "borderRadius": "12dp",
+                        "backgroundColor": "@chip",
+                        "paddingLeft": "12dp",
+                        "paddingRight": "12dp",
+                        "paddingTop": "4dp",
+                        "paddingBottom": "4dp",
+                        "item": {
+                          "type": "Text",
+                          "text": "${dashboard.camera.label}",
+                          "fontSize": "18dp",
+                          "color": "@text"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Frame",
+                    "description": "Agenda card",
+                    "width": "100%",
+                    "grow": 1,
+                    "shrink": 1,
+                    "marginTop": "16dp",
+                    "borderRadius": "@radius",
+                    "backgroundColor": "@card",
+                    "item": {
+                      "type": "Container",
+                      "width": "100%",
+                      "height": "100%",
+                      "paddingLeft": "20dp",
+                      "paddingRight": "20dp",
+                      "paddingTop": "16dp",
+                      "paddingBottom": "8dp",
+                      "items": [
+                        {
+                          "type": "Text",
+                          "text": "UP NEXT",
+                          "fontSize": "18dp",
+                          "fontWeight": "500",
+                          "letterSpacing": "2dp",
+                          "color": "@textDim"
+                        },
+                        {
+                          "type": "Text",
+                          "when": "${dashboard.agenda.length == 0}",
+                          "text": "Nothing scheduled",
+                          "fontSize": "22dp",
+                          "color": "@textDim",
+                          "paddingTop": "12dp"
+                        },
+                        {
+                          "type": "Sequence",
+                          "when": "${dashboard.agenda.length > 0}",
+                          "width": "100%",
+                          "height": "100%",
+                          "shrink": 1,
+                          "data": "${dashboard.agenda}",
+                          "items": [
+                            { "type": "AgendaRow", "event": "${data}" }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "text": "${dashboard.footer}",
+            "fontSize": "16dp",
+            "color": "@textDim",
+            "maxLines": 1,
+            "paddingTop": "6dp"
+          }
+        ]
+      }
+    ]
+  }
+}

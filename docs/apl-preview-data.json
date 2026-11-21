@@ -1,0 +1,138 @@
+{
+  "dashboard": {
+    "clockFormat": "h:mm",
+    "showAmPm": true,
+    "weekdays": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "weather": {
+      "temp": "18",
+      "condition": "Partly cloudy",
+      "details": "H 21°  L 11°  ·  Sample weather"
+    },
+    "tiles": [
+      {
+        "id": "light.living_room",
+        "name": "Living Room",
+        "kind": "toggle",
+        "on": true,
+        "interactive": true,
+        "status": "On · 70%"
+      },
+      {
+        "id": "light.kitchen",
+        "name": "Kitchen",
+        "kind": "toggle",
+        "on": false,
+        "interactive": true,
+        "status": "Off"
+      },
+      {
+        "id": "light.bedroom",
+        "name": "Bedroom",
+        "kind": "toggle",
+        "on": false,
+        "interactive": true,
+        "status": "Off"
+      },
+      {
+        "id": "fan.bedroom",
+        "name": "Fan",
+        "kind": "toggle",
+        "on": false,
+        "interactive": true,
+        "status": "Off"
+      },
+      {
+        "id": "scene.movie_time",
+        "name": "Movie Time",
+        "kind": "scene",
+        "on": false,
+        "interactive": true,
+        "status": "Tap to run"
+      },
+      {
+        "id": "script.good_night",
+        "name": "Good Night",
+        "kind": "scene",
+        "on": false,
+        "interactive": true,
+        "status": "Tap to run"
+      },
+      {
+        "id": "climate.home",
+        "name": "Thermostat",
+        "kind": "sensor",
+        "on": false,
+        "interactive": false,
+        "status": "21° · Heating"
+      },
+      {
+        "id": "sensor.outdoor_temperature",
+        "name": "Outside",
+        "kind": "sensor",
+        "on": false,
+        "interactive": false,
+        "status": "12°C"
+      }
+    ],
+    "agenda": [
+      {
+        "day": "Today",
+        "time": "5:00 AM",
+        "title": "Team call"
+      },
+      {
+        "day": "Today",
+        "time": "8:00 AM",
+        "title": "Gym"
+      },
+      {
+        "day": "Tomorrow",
+        "time": "All day",
+        "title": "Recycling day"
+      },
+      {
+        "day": "Tomorrow",
+        "time": "8:00 AM",
+        "title": "Dinner with friends"
+      }
+    ],
+    "camera": {
+      "mode": "none",
+      "url": "",
+      "label": "Front Door",
+      "hint": "Add a camera in config.js"
+    },
+    "media": {
+      "enabled": true,
+      "title": "Sample track",
+      "subtitle": "Connect a media player in config.js",
+      "art": "",
+      "playing": true,
+      "interactive": true
+    },
+    "footer": "Home  ·  Updated 3:26 AM  ·  Sample devices, weather, calendar: edit config.js",
+    "refreshMs": 900000
+  }
+}
